@@ -14,9 +14,9 @@ pipeline {
         stage('SonarQube Analysis'){
             steps{
                 withSonarQubeEnv() {
-                        sh 'mvn clean verify sonar:sonar \
-                        -Dsonar.projectKey=Maven-Jenkinsfile \
-                        -Dsonar.host.url=%SONAR_HOST_URL% \
+                        sh 'mvn clean verify sonar:sonar ^
+                        -Dsonar.projectKey=Maven-Jenkinsfile ^
+                        -Dsonar.host.url=%SONAR_HOST_URL% ^
                         -Dsonar.login=%SONAR_AUTH_TOKEN%
                 }
             }
