@@ -1,10 +1,15 @@
 pipeline {
-    agent any
-    tools { 
-        maven 'maven-3.8.6' 
+    agent { label 'Agent_win_gb' }
+
+    tools {
+        maven 'M3'
     }
 
-         stages {
+    environment {
+        SONAR_TOKEN = credentials('Sonar-qube')
+    }
+
+    stages {
         stage('Checkout Source') {
             steps {
                 // Aapka bataya hua scmGit block yahan set kar diya hai
@@ -15,25 +20,19 @@ pipeline {
                 )
             }
         }
-       
-        stage('SonarQube Analysis'){
-            steps{
-                withSonarQubeEnv() {
-                        sh 'mvn clean verify sonar:sonar ^
-                        -Dsonar.projectKey=Maven-Jenkinsfile ^
-                        -Dsonar.host.url=%SONAR_HOST_URL% ^
-                        -Dsonar.login=%SONAR_AUTH_TOKEN%
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube-Server') {
+                    bat "mvn clean verify sonar:sonar -Dsonar.projectKey=Maven-Jenkinsfile -Dsonar.token=%SONAR_TOKEN%"
                 }
             }
         }
-        stage("Quality Gate") {
+
+        stage('Quality Gate') {
             steps {
-              timeout(time: 1, unit: 'HOURS') {
                 waitForQualityGate abortPipeline: true
-              }
             }
         }
-   
+    }
 }
-
-    
