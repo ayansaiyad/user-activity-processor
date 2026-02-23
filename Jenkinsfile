@@ -1,36 +1,34 @@
 pipeline {
-    agent { label 'Agent_win_gb' }
-
-    tools {
-        maven 'M3'
+    agent any
+    tools { 
+        maven 'maven-3.8.6' 
     }
-
-    environment {
-        // Isse aapka credential secure (hide) rahega
-        SONAR_TOKEN = credentials('Sonar-qube')
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Checkout git') {
             steps {
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ayan', url: 'https://github.com/ayansaiyad/user-activity-processor.git']])
-                )
+               git branch: 'main', url: 'https://github.com/ayansaiyad/user-activity-processor.git'
             }
         }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube-Server') {
-                    // Windows (bat) mein credential ko % se call karte hain hide rakhne ke liye
-                    bat "mvn clean verify sonar:sonar -Dsonar.projectKey=Maven-Jenkinsfile -Dsonar.token=%SONAR_TOKEN%"
+        
+       
+        stage('SonarQube Analysis'){
+            steps{
+                withSonarQubeEnv() {
+                        sh 'mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=Maven-Jenkinsfile \
+                        -Dsonar.host.url=%SONAR_HOST_URL% \
+                        -Dsonar.login=%SONAR_AUTH_TOKEN%
                 }
             }
         }
-
-        stage('Quality Gate') {
+        stage("Quality Gate") {
             steps {
+              timeout(time: 1, unit: 'HOURS') {
                 waitForQualityGate abortPipeline: true
+              }
             }
         }
-    }
+   
 }
+
+    
