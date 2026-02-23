@@ -3,13 +3,18 @@ pipeline {
     tools { 
         maven 'maven-3.8.6' 
     }
-    stages {
-        stage('Checkout git') {
+
+         stages {
+        stage('Checkout Source') {
             steps {
-               git branch: 'main', url: 'https://github.com/ayansaiyad/user-activity-processor.git'
+                // Aapka bataya hua scmGit block yahan set kar diya hai
+                checkout scmGit(
+                    branches: [[name: '*/main']], 
+                    extensions: [], 
+                    userRemoteConfigs: [[credentialsId: 'ayan', url: 'https://github.com/ayansaiyad/user-activity-processor.git']]
+                )
             }
         }
-        
        
         stage('SonarQube Analysis'){
             steps{
