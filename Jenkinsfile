@@ -13,9 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(
-                    branches: [[name: '*/main']], 
-                    userRemoteConfigs: [[credentialsId: 'ayan', url: 'https://github.com/ayansaiyad/user-activity-processor.git']]
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ayan', url: 'https://github.com/ayansaiyad/user-activity-processor.git']])
                 )
             }
         }
