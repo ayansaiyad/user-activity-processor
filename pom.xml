@@ -9,10 +9,8 @@
 	<artifactId>user-activity-processor</artifactId>
   	<version>1.0.0-${maven.build.timestamp}</version>
 	
-
-
     <properties>
-	<maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
+		<maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
